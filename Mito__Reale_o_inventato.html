@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Massi — Reale o inventato?</title>
+<style>
+@import url('');
+:root{font-family:ui-rounded,"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;color:#233343;background:#f3f6f8}
+*{box-sizing:border-box}body{margin:0}main{max-width:850px;margin:26px auto;padding:0 18px 36px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}h1{font-size:clamp(25px,4vw,37px);margin:0;font-weight:800;letter-spacing:-.6px}.tiny{font-size:15px;color:#657482}.panel{background:white;border:2px solid #dbe4eb;border-radius:20px;padding:clamp(22px,4vw,40px);box-shadow:0 5px 20px #294a6510}.topline{display:flex;justify-content:space-between;gap:14px;color:#5e7181;font-size:17px;font-weight:700;margin-bottom:12px}.bar{height:10px;background:#e8eef3;border-radius:999px;overflow:hidden;margin-bottom:32px}.bar>div{background:#4687a5;height:100%;width:0;transition:width .3s}.tag{display:inline-block;background:#eaf3f8;color:#265e7b;border-radius:999px;padding:8px 14px;font-size:16px;font-weight:800;margin-bottom:18px}.prompt{font-size:clamp(24px,4vw,33px);font-weight:800;line-height:1.3;margin:0 0 28px}.scene{background:#f7f9fb;border:2px solid #e5ebef;padding:25px;border-radius:15px;font-size:clamp(25px,3.9vw,33px);line-height:1.45;font-weight:650;margin:0 0 25px}.answers{display:grid;gap:14px}.answer{font:inherit;font-size:clamp(22px,3.6vw,27px);font-weight:750;text-align:left;padding:22px 24px;border:3px solid #cbd8e2;background:#fff;border-radius:15px;color:#253948;cursor:pointer;min-height:83px}.answer:hover:not(:disabled),.answer:focus-visible{border-color:#367b9f;background:#f1f8fc;outline:none}.answer:disabled{cursor:default}.answer.chosen{border-color:#4687a5;background:#e8f4fa}.answer.correct{border-color:#43866f;background:#e9f7ef}.answer.wrong{border-color:#b96d63;background:#fff2f0}.feedback{font-size:20px;line-height:1.4;font-weight:700;margin-top:20px;min-height:31px}.ok{color:#327055}.retry{color:#9c5147}.nav{display:flex;justify-content:flex-end;gap:10px;margin-top:25px}.next,.start,.restart,.print{font:inherit;border:none;border-radius:14px;font-size:20px;font-weight:800;padding:16px 27px;cursor:pointer}.next,.start{background:#286f93;color:white}.next:disabled{background:#a4b4be;cursor:not-allowed}.restart,.print{background:#e8eef2;color:#29495f}.intro p,.end p{font-size:21px;line-height:1.55}.intro ul{font-size:20px;line-height:1.8;padding-left:25px}.invisible{display:none}.summary{display:grid;grid-template-columns:1fr auto;gap:12px;border-bottom:1px solid #dae3e9;padding:14px 0;font-size:19px}.summary strong{font-size:22px}.note{display:block;font-size:17px;font-weight:700;margin-top:25px;margin-bottom:9px}textarea{width:100%;min-height:120px;border:2px solid #cbd8e2;border-radius:12px;padding:12px;font:inherit;font-size:18px;resize:vertical}.smallprint{font-size:16px;color:#6b7883;margin-top:19px}.highlight{font-weight:800;color:#245c78}.pair{font-weight:750}button:focus-visible{outline:4px solid #e3ae5c;outline-offset:3px}@media(max-width:600px){main{margin-top:12px}.panel{border-radius:16px}.answer{padding:17px 18px;min-height:74px}.scene{padding:19px}.topline{font-size:15px}}@media print{body{background:white}main{max-width:none}.panel{border:0;box-shadow:none;padding:8px}header,.restart,.print,.nav,.bar,.tag{display:none!important}textarea{min-height:70px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Reale o inventato?</h1><span class="tiny">ITALIANO</span></header>
+<section id="intro" class="panel intro">
+ <div class="tag">Attività guidata</div>
+ <h2 style="font-size:29px;margin:0">Leggi e scegli.</h2>
+ <p>In questa attività incontrerai fatti che <strong>possono succedere davvero</strong> e fatti <strong>inventati</strong>.</p>
+ <p>Ci sono <strong>3 parti</strong>. In ogni parte la domanda rimane uguale.</p>
+ <button id="start" class="start">Inizia</button>
+</section>
+<section id="quiz" class="panel invisible" aria-live="polite">
+ <div class="topline"><span id="part">Parte 1</span><span id="counter">1 di 15</span></div>
+ <div class="bar" aria-hidden="true"><div id="barfill"></div></div>
+ <div id="tag" class="tag">PARTE 1</div>
+ <h2 id="prompt" class="prompt"></h2>
+ <div id="scene" class="scene"></div>
+ <div id="answers" class="answers"></div>
+ <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+ <div class="nav"><button id="next" class="next" disabled>Avanti →</button></div>
+</section>
+<section id="end" class="panel end invisible">
+ <div class="tag">Attività conclusa</div>
+ <h2 style="font-size:31px;margin:0 0 12px">Hai finito!</h2>
+ <p>Queste sono le risposte al <strong>primo tentativo</strong>, utili all'insegnante per osservare l'attività.</p>
+ <div id="results"></div>
+ <label class="note" for="notes">Osservazioni dell'insegnante (facoltative)</label>
+ <textarea id="notes" placeholder="Ad esempio: ha letto autonomamente, ha avuto bisogno di una rilettura, ha risposto senza considerare il testo…"></textarea>
+ <div class="nav" style="justify-content:flex-start;flex-wrap:wrap"><button class="print" onclick="window.print()">Stampa riepilogo</button><button id="restart" class="restart">Ricomincia</button></div>
+ <p class="smallprint">Le risposte non vengono inviate o salvate online. Il riepilogo rimane visibile finché la pagina resta aperta.</p>
+</section>
+</main>
+<script>
+'use strict';
+// 5 domande per blocco. Le risposte corrette non sono sempre nella stessa posizione.
+const questions=[
+ {part:1,scene:'Un ragazzo corre nel parco.',choices:['SÌ','NO'],correct:0},
+ {part:1,scene:'Un gatto legge il giornale.',choices:['SÌ','NO'],correct:1},
+ {part:1,scene:'Una bambina va a scuola.',choices:['SÌ','NO'],correct:0},
+ {part:1,scene:'Un albero parla con un passante.',choices:['SÌ','NO'],correct:1},
+ {part:1,scene:'Una persona prepara la cena.',choices:['SÌ','NO'],correct:0},
+ {part:2,scene:'Scegli la situazione inventata.',choices:['Un pesce guida un’automobile.','Un uomo compra il pane.'],correct:0},
+ {part:2,scene:'Scegli la situazione inventata.',choices:['Una ragazza ascolta la musica.','Una montagna cammina.'],correct:1},
+ {part:2,scene:'Scegli la situazione inventata.',choices:['Un bambino gioca a pallone.','Un tavolo racconta una storia.'],correct:1},
+ {part:2,scene:'Scegli la situazione inventata.',choices:['Una bicicletta vola da sola fino alla Luna.','Un autobus si ferma alla fermata.'],correct:0},
+ {part:2,scene:'Scegli la situazione inventata.',choices:['Una donna beve un bicchiere d’acqua.','Una scarpa canta una canzone.'],correct:1},
+ {part:3,scene:'<strong>STORIA A</strong><p>Marco esce di casa. Comincia a piovere. Marco apre l’ombrello.</p><strong>STORIA B</strong><p>Marco esce di casa. Una nuvola parlante lo saluta. Marco risponde alla nuvola.</p>',choices:['Storia A','Storia B'],correct:1},
+ {part:3,scene:'<strong>STORIA A</strong><p>Giulia entra in biblioteca. Un libro si apre da solo e le parla.</p><strong>STORIA B</strong><p>Giulia entra in biblioteca. Prende un libro e comincia a leggere.</p>',choices:['Storia A','Storia B'],correct:0},
+ {part:3,scene:'<strong>STORIA A</strong><p>Paolo va al mare. Nuota e poi si asciuga con un telo.</p><strong>STORIA B</strong><p>Paolo va al mare. Un pesce gli chiede che ore sono.</p>',choices:['Storia A','Storia B'],correct:1},
+ {part:3,scene:'<strong>STORIA A</strong><p>Anna apre l’armadio. Una giacca comincia a ballare.</p><strong>STORIA B</strong><p>Anna apre l’armadio. Prende una giacca e la indossa.</p>',choices:['Storia A','Storia B'],correct:0},
+ {part:3,scene:'<strong>STORIA A</strong><p>Luca entra in cucina. Prende una mela dal cestino.</p><strong>STORIA B</strong><p>Luca entra in cucina. Una mela gli racconta una barzelletta.</p>',choices:['Storia A','Storia B'],correct:1}
+];
+const prompts={1:'Può succedere davvero?',2:'Quale situazione è inventata?',3:'In quale storia succede qualcosa di inventato?'};
+const titles={1:'Può succedere davvero?',2:'Trova la situazione inventata',3:'Trova la storia con un fatto inventato'};
+let index=0,answered=false,first=[];
+const $=id=>document.getElementById(id);
+function show(id){['intro','quiz','end'].forEach(s=>$(s).classList.toggle('invisible',s!==id));}
+function render(){
+ const q=questions[index];answered=false;show('quiz');
+ $('part').textContent=`Parte ${q.part} di 3 — ${titles[q.part]}`;
+ $('counter').textContent=`${index+1} di ${questions.length}`;
+ $('tag').textContent=`PARTE ${q.part}`;
+ $('barfill').style.width=`${index/questions.length*100}%`;
+ $('prompt').textContent=prompts[q.part];
+ $('scene').innerHTML=q.part===2?'Leggi le due frasi.':q.scene;
+ $('answers').innerHTML='';$('feedback').textContent='';$('feedback').className='feedback';$('next').disabled=true;
+ q.choices.forEach((label,i)=>{
+  let btn=document.createElement('button');btn.type='button';btn.className='answer';btn.textContent=label;btn.addEventListener('click',()=>choose(i));$('answers').append(btn);
+ });
+ $('next').textContent=index===questions.length-1?'Termina →':'Avanti →';
+}
+function choose(choice){
+ if(answered)return;
+ const q=questions[index];answered=true;const good=choice===q.correct;
+ first.push({part:q.part,good,choice,correct:q.correct});
+ [...$('answers').children].forEach((btn,i)=>{btn.disabled=true;if(i===q.correct)btn.classList.add('correct');else if(i===choice)btn.classList.add('wrong');});
+ $('feedback').textContent=good?'Esatto.':q.part===1?(q.correct===0?'Questo può succedere davvero.':'Questo è inventato.'):'Guarda la risposta indicata.';
+ $('feedback').classList.add(good?'ok':'retry');$('next').disabled=false;
+}
+function finish(){show('end');$('barfill').style.width='100%';$('results').innerHTML='';
+ for(let p=1;p<=3;p++){
+  const arr=first.filter(x=>x.part===p),score=arr.filter(x=>x.good).length;
+  let el=document.createElement('div');el.className='summary';
+  el.innerHTML=`<span>Parte ${p} — ${titles[p]}</span><strong>${score} / ${arr.length}</strong>`;
+  $('results').append(el);
+ }
+}
+$('start').addEventListener('click',()=>{index=0;first=[];$('notes').value='';render();});
+$('next').addEventListener('click',()=>{if(!answered)return;if(index<questions.length-1){index++;render();}else finish();});
+$('restart').addEventListener('click',()=>{index=0;first=[];show('intro');});
+</script>
+</body>
+</html>
