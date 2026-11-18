@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trova il fatto inventato — Altri esercizi</title>
+<style>
+:root{font-family:'Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;color:#24353f;background:#f2f5f7}*{box-sizing:border-box}body{margin:0;padding:20px}main{max-width:780px;margin:22px auto;background:#fff;border-radius:22px;padding:clamp(22px,5vw,46px);box-shadow:0 7px 28px #18313c12}h1{font-size:clamp(29px,4.5vw,39px);margin:0 0 8px}.count{color:#506974;font-size:18px;margin-bottom:15px}.instruction{font-size:24px;font-weight:750;margin:18px 0 12px}.story{border-left:6px solid #49768b;background:#f1f7fa;border-radius:10px;padding:17px 23px;margin:16px 0 25px}.story p{margin:10px 0;font-size:clamp(21px,3vw,25px);line-height:1.5}.question{font-weight:800;font-size:clamp(24px,3.5vw,29px);margin:12px 0 20px}.options{display:grid;gap:12px}.choice{width:100%;display:flex;align-items:flex-start;gap:14px;text-align:left;font:inherit;font-size:clamp(20px,2.8vw,23px);line-height:1.4;color:inherit;background:#fff;border:2px solid #b5c9d1;border-radius:14px;padding:17px 18px;cursor:pointer}.choice:hover:not(:disabled){background:#f3f9fb}.choice:focus-visible,.next:focus-visible{outline:4px solid #f0b44e;outline-offset:3px}.letter{min-width:30px;font-weight:800}.choice.correct{border-color:#24835e;background:#e6f5ec}.choice.wrong{border-color:#c3774f;background:#fff1e8}.feedback{min-height:44px;font-size:21px;font-weight:700;margin-top:18px}.feedback.ok{color:#176b49}.feedback.retry{color:#a45231}.next{display:none;background:#2c607a;color:white;border:0;border-radius:12px;font:inherit;font-size:21px;padding:15px 24px;margin-top:14px;cursor:pointer}.finish{display:none}.finish h2{font-size:30px}.finish p{font-size:23px;line-height:1.5}.note{font-size:16px;color:#60747e;margin-top:24px}details{margin-top:30px;color:#52656d;font-size:16px}details summary{cursor:pointer}details p{font-size:16px;line-height:1.5}@media(max-width:480px){body{padding:8px}main{margin:6px auto;padding:20px;border-radius:14px}.choice{padding:13px}.story{padding:12px 17px}}@media print{body{background:white}main{box-shadow:none}}
+</style>
+</head>
+<body><main>
+<section id="activity">
+<h1>Trova il fatto inventato</h1>
+<div class="count" id="count"></div>
+<p class="instruction">Leggi la storia.</p>
+<div class="story" id="story"></div>
+<p class="question">Quale fatto è inventato?</p>
+<div class="options" id="options" role="group" aria-label="Scegli il fatto inventato"></div>
+<div class="feedback" id="feedback" aria-live="polite" role="status"></div>
+<button type="button" class="next" id="next">Avanti</button>
+<p class="note">Una storia alla volta. Nessun limite di tempo.</p>
+</section>
+<section class="finish" id="finish"><h1>Attività completata!</h1><p>Hai letto tutte le storie.</p><button type="button" class="next" id="again" style="display:inline-block">Ricomincia</button><details><summary>Osservazioni per l'insegnante</summary><p id="report"></p></details></section>
+</main>
+<script>
+'use strict';
+// Tutte le frasi sono brevi e presentano un unico evento inequivocabilmente inventato.
+const exercises=[
+ {s:['Anna prende lo zaino.','Esce di casa per andare a scuola.','Lo zaino apre gli occhi e le dice buongiorno.'],a:2},
+ {s:['Paolo entra in cucina.','Il frigorifero gli racconta una barzelletta.','Paolo beve un bicchiere d’acqua.'],a:1},
+ {s:['Un ragazzo cammina nel parco.','Si siede su una panchina.','La panchina si alza e comincia a correre.'],a:2},
+ {s:['Giulia guarda fuori dalla finestra.','Una nuvola le fa un saluto con la mano.','In strada passa un autobus.'],a:1},
+ {s:['Marco mette un libro sul tavolo.','Apre il quaderno.','Il libro vola da solo fino al soffitto.'],a:2},
+ {s:['Sara va in bicicletta.','Una pietra le chiede dove sta andando.','Sara si ferma vicino a un albero.'],a:1},
+ {s:['Davide accende la lampada.','Prende una matita.','La matita comincia a cantare da sola.'],a:2},
+ {s:['In giardino cresce un fiore.','Il fiore si stacca da terra e balla.','Un bambino lo osserva.'],a:1},
+ {s:['Elena apre l’ombrello.','Cammina sotto la pioggia.','L’ombrello si trasforma in un cavallo parlante.'],a:2},
+ {s:['Tommaso entra in biblioteca.','Uno scaffale gli dice di fare silenzio.','Tommaso sceglie un libro.'],a:1}
+];
+let index=0, mistakes=Array(exercises.length).fill(0), firstTry=Array(exercises.length).fill(false);
+const $=id=>document.getElementById(id);
+function render(){
+ const ex=exercises[index];$('count').textContent='Storia '+(index+1)+' di '+exercises.length;
+ $('story').replaceChildren();ex.s.forEach(line=>{const p=document.createElement('p');p.textContent=line;$('story').appendChild(p)});
+ $('options').replaceChildren();$('feedback').textContent='';$('feedback').className='feedback';$('next').style.display='none';
+ ex.s.forEach((line,i)=>{const button=document.createElement('button');button.type='button';button.className='choice';const label=document.createElement('span');label.className='letter';label.textContent='ABC'[i]+'.';const text=document.createElement('span');text.textContent=line;button.append(label,text);button.addEventListener('click',()=>choose(i,button));$('options').appendChild(button)});
+}
+function choose(choice,button){const ex=exercises[index];if(choice===ex.a){
+ if(mistakes[index]===0)firstTry[index]=true;
+ button.classList.add('correct');$('feedback').textContent='Esatto! Questo fatto è inventato.';$('feedback').className='feedback ok';
+ [...$('options').children].forEach(b=>b.disabled=true);$('next').textContent=index===exercises.length-1?'Concludi':'Avanti';$('next').style.display='inline-block';$('next').focus();
+ }else{mistakes[index]++;[...$('options').children].forEach(b=>b.classList.remove('wrong'));button.classList.add('wrong');$('feedback').textContent='Rileggi la storia e riprova.';$('feedback').className='feedback retry';}}
+$('next').addEventListener('click',()=>{if(index<exercises.length-1){index++;render();window.scrollTo(0,0)}else{const correct=firstTry.filter(Boolean).length;$('activity').style.display='none';$('finish').style.display='block';$('report').textContent='Risposte corrette al primo tentativo: '+correct+' su '+exercises.length+'. Storie con almeno un tentativo errato: '+mistakes.map((m,i)=>m?i+1:null).filter(Boolean).join(', ').replace(/^$/,'nessuna')+'. Osservare anche lettura della consegna, autonomia e necessità di aiuto.';window.scrollTo(0,0)}});
+$('again').addEventListener('click',()=>{index=0;mistakes=Array(exercises.length).fill(0);firstTry=Array(exercises.length).fill(false);$('activity').style.display='block';$('finish').style.display='none';render();window.scrollTo(0,0)});
+render();
+</script></body></html>
